@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스터디 체크 Pro</title>
+    <title>스터디 체크 Pro V3</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <style>
         :root {
@@ -18,77 +18,46 @@
 
         * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
+        body { background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 600px; }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-
-        h2 { margin-top: 0; color: var(--text-main); }
+        .card { background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 30px; margin-bottom: 20px; }
+        h2, h3 { margin-top: 0; color: var(--text-main); }
         
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            margin-bottom: 10px;
-            transition: border-color 0.2s;
-        }
-        input:focus { outline: none; border-color: var(--primary); }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; margin-bottom: 10px; transition: border-color 0.2s; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
 
-        button {
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-bottom: 8px;
-        }
+        button { width: 100%; background-color: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-bottom: 8px; }
         button:hover { background-color: var(--primary-hover); }
-
+        
         .btn-secondary { background-color: white; color: var(--primary); border: 1px solid var(--primary); }
         .btn-secondary:hover { background-color: #EEF2FF; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .logout-btn { background-color: #EF4444; width: auto; padding: 8px 16px; font-size: 14px; margin: 0; }
-        .logout-btn:hover { background-color: #DC2626; }
+        
+        /* 탭 메뉴 스타일 */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; background: var(--border); color: var(--text-muted); border-radius: 8px; padding: 12px; text-align: center; font-weight: bold; cursor: pointer; }
+        .tab-btn.active { background: var(--primary); color: white; }
 
+        /* 과제 및 통계 리스트 */
         .subject-group { margin-top: 25px; background: #F9FAFB; border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
         .subject-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; }
-        
         .task-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 10px; }
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .task-title { font-size: 16px; font-weight: 600; }
-        .task-note { font-size: 13px; color: var(--text-muted); margin-top: 5px; background: #F3F4F6; padding: 6px 10px; border-radius: 6px; display: inline-block; }
         
         .check-btn { width: auto; padding: 6px 12px; font-size: 13px; border-radius: 6px; margin: 0; }
         .check-btn.checked { background-color: #10B981; }
 
-        .progress-container { width: 100%; background-color: var(--border); border-radius: 99px; height: 8px; margin-top: 15px; margin-bottom: 8px; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: #10B981; transition: width 0.3s ease; }
-
-        .checker-list { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-        .checker-badge { background: #E0E7FF; color: var(--primary); font-size: 12px; padding: 4px 10px; border-radius: 99px; font-weight: 500; }
-        .empty-badge { background: #F3F4F6; color: var(--text-muted); }
+        .checker-badge { background: #E0E7FF; color: var(--primary); font-size: 12px; padding: 4px 10px; border-radius: 99px; font-weight: 500; display: inline-block; margin-right: 5px; margin-top: 5px; }
+        
+        /* 통계(History) 전용 스타일 */
+        .history-date { font-size: 20px; font-weight: bold; border-bottom: 2px solid var(--primary); padding-bottom: 5px; margin-top: 30px; margin-bottom: 15px; color: var(--text-main); }
+        .stats-box { background: #EEF2FF; border-radius: 8px; padding: 15px; margin-bottom: 15px; font-size: 14px; }
+        .stats-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .stats-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
         .hidden { display: none !important; }
     </style>
@@ -115,31 +84,48 @@
 
     <div id="mainBox" class="hidden">
         <div class="header">
-            <h2 style="margin: 0;">환영합니다, <span id="userNameDisplay" style="color: var(--primary);"></span>님!</h2>
+            <h2 style="margin: 0;"><span id="userNameDisplay" style="color: var(--primary);"></span>님, 환영합니다!</h2>
             <button class="logout-btn" onclick="logout()">로그아웃</button>
         </div>
 
-        <div class="card">
-            <h3>새 과제 추가</h3>
-            <div style="display: flex; gap: 10px;">
-                <input id="subject" placeholder="과목 (예: 수학)" style="width: 30%;">
-                <input id="task" placeholder="과제 내용 (예: 미적분 20문제)" style="width: 70%;">
-            </div>
-            <input id="note" placeholder="메모나 주석 (선택사항, 예: 홀수 번호만 풀기)">
-            <button onclick="addTask()">과제 등록하기</button>
+        <div class="tabs">
+            <div class="tab-btn active" id="tabToday" onclick="switchTab('today')">📝 오늘의 과제</div>
+            <div class="tab-btn" id="tabHistory" onclick="switchTab('history')">📊 과거 기록 및 통계</div>
         </div>
 
-        <div id="tasksContainer"></div>
+        <div id="viewToday">
+            <div class="card">
+                <h3>새 과제 추가</h3>
+                <div style="display: flex; gap: 10px;">
+                    <input id="subject" placeholder="과목 (예: 화학)" style="width: 30%;">
+                    <input id="task" placeholder="과제 내용 (예: 주기율표 암기)" style="width: 70%;">
+                </div>
+                <input id="taskDate" type="date">
+                <button onclick="addTask()">과제 등록하기</button>
+            </div>
+            <div id="tasksContainer"></div>
+        </div>
+
+        <div id="viewHistory" class="hidden">
+            <div class="card" style="background: #FFFBEB;">
+                <h3>💡 통계 시스템 안내</h3>
+                <p style="font-size: 14px; color: #555;">날짜별로 누가 어떤 과목을 완수했는지, 팀 전체의 달성률은 몇 퍼센트인지 산출된 기록을 확인합니다.</p>
+                <button class="btn-secondary" onclick="exportData()">📥 전체 데이터 엑셀(CSV) 다운로드</button>
+            </div>
+            <div id="historyContainer"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // 회원 정보 및 과제 정보 불러오기
     let users = JSON.parse(localStorage.getItem("studyUsers") || "[]");
     let tasks = JSON.parse(localStorage.getItem("studyTasks") || "[]");
     let currentUser = "";
 
     window.onload = () => {
+        // 오늘 날짜 세팅
+        document.getElementById("taskDate").value = new Date().toISOString().split('T')[0];
+        
         const savedUser = localStorage.getItem("currentUser");
         if(savedUser) {
             currentUser = savedUser;
@@ -147,46 +133,26 @@
         }
     };
 
-    function showSignup() {
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("signupBox").classList.remove("hidden");
-    }
-
-    function showLogin() {
-        document.getElementById("signupBox").classList.add("hidden");
-        document.getElementById("loginBox").classList.remove("hidden");
-    }
+    function showSignup() { document.getElementById("loginBox").classList.add("hidden"); document.getElementById("signupBox").classList.remove("hidden"); }
+    function showLogin() { document.getElementById("signupBox").classList.add("hidden"); document.getElementById("loginBox").classList.remove("hidden"); }
 
     function registerUser() {
         let name = document.getElementById("signupName").value.trim();
         let id = document.getElementById("signupId").value.trim();
         let pw = document.getElementById("signupPw").value.trim();
 
-        if(!name || !id || !pw) {
-            alert("이름, 학번, 비밀번호를 모두 입력해주세요!");
-            return;
-        }
-
-        if(users.some(u => u.id === id)) {
-            alert("이미 가입된 학번입니다!");
-            return;
-        }
+        if(!name || !id || !pw) return alert("모두 입력해주세요!");
+        if(users.some(u => u.id === id)) return alert("이미 가입된 학번입니다!");
 
         users.push({ id: id, name: name, pw: pw });
         localStorage.setItem("studyUsers", JSON.stringify(users));
-        
-        alert(`${name}님 가입 완료! 이제 로그인해주세요.`);
-        
-        document.getElementById("signupName").value = "";
-        document.getElementById("signupId").value = "";
-        document.getElementById("signupPw").value = "";
+        alert(`${name}님 가입 완료! 로그인해주세요.`);
         showLogin();
     }
 
     function login() {
         let id = document.getElementById("loginId").value.trim();
         let pw = document.getElementById("loginPw").value.trim();
-
         let user = users.find(u => u.id === id && u.pw === pw);
 
         if(user) {
@@ -194,7 +160,7 @@
             localStorage.setItem("currentUser", currentUser);
             showMain();
         } else {
-            alert("학번이나 비밀번호가 틀렸거나, 아직 가입하지 않았습니다.");
+            alert("학번이나 비밀번호가 틀렸습니다.");
         }
     }
 
@@ -203,41 +169,50 @@
         localStorage.removeItem("currentUser");
         document.getElementById("loginBox").classList.remove("hidden");
         document.getElementById("mainBox").classList.add("hidden");
-        document.getElementById("loginId").value = "";
-        document.getElementById("loginPw").value = "";
     }
 
     function showMain() {
         document.getElementById("loginBox").classList.add("hidden");
         document.getElementById("mainBox").classList.remove("hidden");
         document.getElementById("userNameDisplay").innerText = currentUser;
-        render();
+        renderToday();
+    }
+
+    function switchTab(tab) {
+        if(tab === 'today') {
+            document.getElementById("tabToday").classList.add("active");
+            document.getElementById("tabHistory").classList.remove("active");
+            document.getElementById("viewToday").classList.remove("hidden");
+            document.getElementById("viewHistory").classList.add("hidden");
+            renderToday();
+        } else {
+            document.getElementById("tabHistory").classList.add("active");
+            document.getElementById("tabToday").classList.remove("active");
+            document.getElementById("viewHistory").classList.remove("hidden");
+            document.getElementById("viewToday").classList.add("hidden");
+            renderHistory();
+        }
     }
 
     function addTask() {
         let subject = document.getElementById("subject").value.trim();
         let task = document.getElementById("task").value.trim();
-        let note = document.getElementById("note").value.trim(); // 주석(메모) 값 가져오기
+        let date = document.getElementById("taskDate").value;
 
-        if(!subject || !task) {
-            alert("과목과 과제 내용은 필수입니다!");
-            return;
-        }
+        if(!subject || !task || !date) return alert("과목, 과제 내용, 날짜를 모두 입력하세요!");
 
         tasks.push({
             id: Date.now(),
+            date: date, // 날짜 데이터 추가
             subject: subject,
             task: task,
-            note: note, // 주석 저장
             checkedBy: []
         });
 
         document.getElementById("subject").value = "";
         document.getElementById("task").value = "";
-        document.getElementById("note").value = "";
-
         save();
-        render();
+        renderToday();
     }
 
     function toggleCheck(taskId) {
@@ -245,96 +220,126 @@
         if(taskIndex === -1) return;
 
         let task = tasks[taskIndex];
-        
         if(!task.checkedBy.includes(currentUser)) {
             task.checkedBy.push(currentUser);
         } else {
             task.checkedBy = task.checkedBy.filter(n => n !== currentUser);
         }
-
         save();
-        render();
+        renderToday();
     }
 
-    function deleteTask(taskId) {
-        if(confirm("이 과제를 삭제할까요?")) {
-            tasks = tasks.filter(t => t.id !== taskId);
-            save();
-            render();
-        }
-    }
+    function save() { localStorage.setItem("studyTasks", JSON.stringify(tasks)); }
 
-    function save() {
-        localStorage.setItem("studyTasks", JSON.stringify(tasks));
-    }
-
-    function render() {
+    // 오늘의 과제 렌더링 (선택된 날짜가 '오늘'인 것만 표시)
+    function renderToday() {
         let container = document.getElementById("tasksContainer");
         container.innerHTML = "";
+        
+        let today = new Date().toISOString().split('T')[0];
+        let todayTasks = tasks.filter(t => t.date === today);
 
-        if(tasks.length === 0) {
-            container.innerHTML = `<div class="card" style="text-align:center; color:gray;">등록된 과제가 없습니다.</div>`;
+        if(todayTasks.length === 0) {
+            container.innerHTML = `<div class="card" style="text-align:center; color:gray;">오늘 등록된 과제가 없습니다.</div>`;
             return;
         }
 
-        let groupedTasks = tasks.reduce((acc, task) => {
+        let grouped = todayTasks.reduce((acc, task) => {
             if (!acc[task.subject]) acc[task.subject] = [];
             acc[task.subject].push(task);
             return acc;
         }, {});
 
-        // 전체 가입자 수 (진행률 계산용)
-        let totalMembers = users.length > 0 ? users.length : 1; 
-
-        for (let subject in groupedTasks) {
-            let subjectHtml = `<div class="subject-group">
-                                <div class="subject-title">
-                                    <span>📘 ${subject}</span>
-                                </div>`;
-            
-            groupedTasks[subject].forEach(t => {
+        for (let subject in grouped) {
+            let html = `<div class="subject-group"><div class="subject-title"><span>📘 ${subject}</span></div>`;
+            grouped[subject].forEach(t => {
                 let isChecked = t.checkedBy.includes(currentUser);
-                let progressPercent = Math.round((t.checkedBy.length / totalMembers) * 100);
-                
-                // 주석(메모)이 있으면 표시, 없으면 숨김
-                let noteHtml = t.note ? `<div class="task-note">💬 ${t.note}</div>` : '';
-
                 let badgesHtml = t.checkedBy.map(name => `<span class="checker-badge">${name}</span>`).join('');
-                if(t.checkedBy.length === 0) badgesHtml = `<span class="checker-badge empty-badge">아직 검사한 사람이 없어요</span>`;
+                if(t.checkedBy.length === 0) badgesHtml = `<span class="checker-badge" style="background:#F3F4F6; color:gray;">미검사</span>`;
 
-                subjectHtml += `
+                html += `
                     <div class="task-item">
                         <div class="task-header">
-                            <div>
-                                <div class="task-title">${t.task}</div>
-                                ${noteHtml}
-                            </div>
+                            <div class="task-title">${t.task}</div>
                             <button class="check-btn ${isChecked ? 'checked' : ''}" onclick="toggleCheck(${t.id})">
-                                ${isChecked ? '✅ 검사완료' : '⬜ 검사하기'}
+                                ${isChecked ? '✅ 완료' : '⬜ 체크'}
                             </button>
                         </div>
-                        
-                        <div style="font-size: 12px; color: gray; margin-top: 10px;">
-                            진행률: ${t.checkedBy.length} / ${totalMembers} 명 (${progressPercent}%)
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progressPercent}%;"></div>
-                        </div>
+                        <div style="margin-top: 10px;">${badgesHtml}</div>
+                    </div>`;
+            });
+            container.innerHTML += html + `</div>`;
+        }
+    }
 
-                        <div class="checker-list">
-                            ${badgesHtml}
-                        </div>
-                        
-                        <div style="text-align: right; margin-top: 10px;">
-                            <button style="background:none; color:#EF4444; width:auto; padding:0; font-size:12px;" onclick="deleteTask(${t.id})">🗑️ 삭제</button>
-                        </div>
-                    </div>
-                `;
+    // 기록 및 통계 렌더링
+    function renderHistory() {
+        let container = document.getElementById("historyContainer");
+        container.innerHTML = "";
+
+        if(tasks.length === 0) {
+            container.innerHTML = `<div class="card" style="text-align:center; color:gray;">아직 쌓인 기록이 없습니다.</div>`;
+            return;
+        }
+
+        // 1. 날짜별로 그룹화 (최신순 정렬)
+        let groupedByDate = tasks.reduce((acc, task) => {
+            if (!acc[task.date]) acc[task.date] = [];
+            acc[task.date].push(task);
+            return acc;
+        }, {});
+
+        let sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+        let totalUsers = users.length > 0 ? users.length : 1;
+
+        sortedDates.forEach(date => {
+            let dayTasks = groupedByDate[date];
+            let totalPossibleChecks = dayTasks.length * totalUsers;
+            let actualChecks = dayTasks.reduce((sum, t) => sum + t.checkedBy.length, 0);
+            let dayProgress = Math.round((actualChecks / totalPossibleChecks) * 100) || 0;
+
+            // 누가 어떤 과목을 했는지 분석
+            let userStats = {};
+            users.forEach(u => userStats[u.name] = []);
+            
+            dayTasks.forEach(t => {
+                t.checkedBy.forEach(userName => {
+                    if(!userStats[userName].includes(t.subject)) {
+                        userStats[userName].push(t.subject);
+                    }
+                });
             });
 
-            subjectHtml += `</div>`;
-            container.innerHTML += subjectHtml;
-        }
+            let statsHtml = `<div class="stats-box">
+                                <strong style="color:var(--primary);">📈 팀 전체 달성률: ${dayProgress}%</strong><br><br>`;
+            
+            for(let userName in userStats) {
+                let subjectsDone = userStats[userName].length > 0 ? userStats[userName].join(", ") : "완료 없음";
+                statsHtml += `<div class="stats-row"><span>👤 ${userName}</span> <span>${subjectsDone}</span></div>`;
+            }
+            statsHtml += `</div>`;
+
+            let html = `<div class="history-date">📅 ${date}</div>` + statsHtml;
+            container.innerHTML += html;
+        });
+    }
+
+    // 데이터 엑셀(CSV) 외부 저장 기능
+    function exportData() {
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+        csvContent += "날짜,과목,과제내용,완료한사람\n"; // 헤더
+
+        tasks.forEach(t => {
+            let row = `${t.date},${t.subject},${t.task},"${t.checkedBy.join(', ')}"`;
+            csvContent += row + "\n";
+        });
+
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "스터디기록_데이터.csv");
+        document.body.appendChild(link);
+        link.click();
     }
 </script>
 
