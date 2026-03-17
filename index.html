@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스터디 체크 Pro V3</title>
+    <title>스터디 체크 Pro V4 (서버 연동)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <style>
         :root {
@@ -60,9 +60,29 @@
         .stats-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
         .hidden { display: none !important; }
+
+        /* 로딩 화면 (서버 통신 중) */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.85); display: flex;
+            justify-content: center; align-items: center;
+            font-size: 20px; font-weight: bold; color: var(--primary);
+            z-index: 9999; flex-direction: column;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+<div id="loading" class="hidden">
+    <div class="spinner"></div>
+    <div>클라우드 서버와 동기화 중...</div>
+</div>
 
 <div class="container">
     <div class="card" id="loginBox">
@@ -101,7 +121,12 @@
                     <input id="task" placeholder="과제 내용 (예: 주기율표 암기)" style="width: 70%;">
                 </div>
                 <input id="taskDate" type="date">
-                <button onclick="addTask()">과제 등록하기</button>
+                <button onclick="addTask()">과제 등록하기 (서버에 저장)</button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin:0;">오늘의 리스트</h3>
+                <button class="btn-secondary" style="width:auto; padding: 6px 12px; font-size:12px; margin:0;" onclick="loadDataFromServer()">🔄 새로고침</button>
             </div>
             <div id="tasksContainer"></div>
         </div>
@@ -109,7 +134,7 @@
         <div id="viewHistory" class="hidden">
             <div class="card" style="background: #FFFBEB;">
                 <h3>💡 통계 시스템 안내</h3>
-                <p style="font-size: 14px; color: #555;">날짜별로 누가 어떤 과목을 완수했는지, 팀 전체의 달성률은 몇 퍼센트인지 산출된 기록을 확인합니다.</p>
+                <p style="font-size: 14px; color: #555;">서버(구글 시트)에 기록된 데이터를 기반으로 팀 전체의 달성률을 산출합니다.</p>
                 <button class="btn-secondary" onclick="exportData()">📥 전체 데이터 엑셀(CSV) 다운로드</button>
             </div>
             <div id="historyContainer"></div>
@@ -118,14 +143,16 @@
 </div>
 
 <script>
+    // 네가 발급받은 진짜 서버 주소!
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOyp8p6Hg0Pn-6qmMY5vUmmRF70vEduIFZcKVwxVLqt9cpOeUI6yiNR0ekJglHwp9W/exec";
+    
+    // 유저 정보는 폰(기기)마다 로컬로 저장해야 함
     let users = JSON.parse(localStorage.getItem("studyUsers") || "[]");
-    let tasks = JSON.parse(localStorage.getItem("studyTasks") || "[]");
+    let tasks = []; // 서버에서 불러올 빈 배열
     let currentUser = "";
 
     window.onload = () => {
-        // 오늘 날짜 세팅
         document.getElementById("taskDate").value = new Date().toISOString().split('T')[0];
-        
         const savedUser = localStorage.getItem("currentUser");
         if(savedUser) {
             currentUser = savedUser;
@@ -133,6 +160,47 @@
         }
     };
 
+    function showLoading(show) {
+        if(show) document.getElementById('loading').classList.remove('hidden');
+        else document.getElementById('loading').classList.add('hidden');
+    }
+
+    // 서버(구글 시트)에서 데이터 불러오기
+    async function loadDataFromServer() {
+        showLoading(true);
+        try {
+            let res = await fetch(SCRIPT_URL);
+            let data = await res.json();
+            tasks = data; // 서버 데이터를 내 폰에 덮어쓰기
+            
+            renderToday();
+            if(!document.getElementById("viewHistory").classList.contains("hidden")) {
+                renderHistory();
+            }
+        } catch (error) {
+            console.error(error);
+            alert("서버에서 데이터를 불러오는데 실패했습니다.");
+        }
+        showLoading(false);
+    }
+
+    // 서버(구글 시트)에 데이터 저장하기
+    async function saveDataToServer() {
+        showLoading(true);
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(tasks)
+            });
+        } catch (error) {
+            console.error(error);
+            alert("서버 통신 오류! 데이터가 저장되지 않았을 수 있습니다.");
+        }
+        showLoading(false);
+    }
+
+    // 화면 전환 관련 함수
     function showSignup() { document.getElementById("loginBox").classList.add("hidden"); document.getElementById("signupBox").classList.remove("hidden"); }
     function showLogin() { document.getElementById("signupBox").classList.add("hidden"); document.getElementById("loginBox").classList.remove("hidden"); }
 
@@ -171,11 +239,12 @@
         document.getElementById("mainBox").classList.add("hidden");
     }
 
+    // 메인 화면 진입 시 서버 데이터 자동 로드
     function showMain() {
         document.getElementById("loginBox").classList.add("hidden");
         document.getElementById("mainBox").classList.remove("hidden");
         document.getElementById("userNameDisplay").innerText = currentUser;
-        renderToday();
+        loadDataFromServer(); 
     }
 
     function switchTab(tab) {
@@ -194,7 +263,7 @@
         }
     }
 
-    function addTask() {
+    async function addTask() {
         let subject = document.getElementById("subject").value.trim();
         let task = document.getElementById("task").value.trim();
         let date = document.getElementById("taskDate").value;
@@ -203,20 +272,23 @@
 
         tasks.push({
             id: Date.now(),
-            date: date, // 날짜 데이터 추가
+            date: date,
             subject: subject,
             task: task,
+            note: "",
             checkedBy: []
         });
 
         document.getElementById("subject").value = "";
         document.getElementById("task").value = "";
-        save();
+        
+        // 폰 화면 먼저 업데이트 후 서버에 저장
         renderToday();
+        await saveDataToServer();
     }
 
-    function toggleCheck(taskId) {
-        let taskIndex = tasks.findIndex(t => t.id === taskId);
+    async function toggleCheck(taskId) {
+        let taskIndex = tasks.findIndex(t => t.id == taskId);
         if(taskIndex === -1) return;
 
         let task = tasks[taskIndex];
@@ -225,13 +297,15 @@
         } else {
             task.checkedBy = task.checkedBy.filter(n => n !== currentUser);
         }
-        save();
+        
+        // 폰 화면 즉시 반영
         renderToday();
+        if(!document.getElementById("viewHistory").classList.contains("hidden")) renderHistory();
+        
+        // 서버에 저장
+        await saveDataToServer();
     }
 
-    function save() { localStorage.setItem("studyTasks", JSON.stringify(tasks)); }
-
-    // 오늘의 과제 렌더링 (선택된 날짜가 '오늘'인 것만 표시)
     function renderToday() {
         let container = document.getElementById("tasksContainer");
         container.innerHTML = "";
@@ -272,17 +346,15 @@
         }
     }
 
-    // 기록 및 통계 렌더링
     function renderHistory() {
         let container = document.getElementById("historyContainer");
         container.innerHTML = "";
 
         if(tasks.length === 0) {
-            container.innerHTML = `<div class="card" style="text-align:center; color:gray;">아직 쌓인 기록이 없습니다.</div>`;
+            container.innerHTML = `<div class="card" style="text-align:center; color:gray;">아직 서버에 쌓인 기록이 없습니다.</div>`;
             return;
         }
 
-        // 1. 날짜별로 그룹화 (최신순 정렬)
         let groupedByDate = tasks.reduce((acc, task) => {
             if (!acc[task.date]) acc[task.date] = [];
             acc[task.date].push(task);
@@ -290,6 +362,7 @@
         }, {});
 
         let sortedDates = Object.keys(groupedByDate).sort((a, b) => new Date(b) - new Date(a));
+        // 통계 기준 인원수 (본인 폰에 가입된 유저 수 기준, 최소 1명)
         let totalUsers = users.length > 0 ? users.length : 1;
 
         sortedDates.forEach(date => {
@@ -298,12 +371,12 @@
             let actualChecks = dayTasks.reduce((sum, t) => sum + t.checkedBy.length, 0);
             let dayProgress = Math.round((actualChecks / totalPossibleChecks) * 100) || 0;
 
-            // 누가 어떤 과목을 했는지 분석
             let userStats = {};
             users.forEach(u => userStats[u.name] = []);
             
             dayTasks.forEach(t => {
                 t.checkedBy.forEach(userName => {
+                    if(!userStats[userName]) userStats[userName] = [];
                     if(!userStats[userName].includes(t.subject)) {
                         userStats[userName].push(t.subject);
                     }
@@ -324,10 +397,9 @@
         });
     }
 
-    // 데이터 엑셀(CSV) 외부 저장 기능
     function exportData() {
         let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-        csvContent += "날짜,과목,과제내용,완료한사람\n"; // 헤더
+        csvContent += "날짜,과목,과제내용,완료한사람\n"; 
 
         tasks.forEach(t => {
             let row = `${t.date},${t.subject},${t.task},"${t.checkedBy.join(', ')}"`;
