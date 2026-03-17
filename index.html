@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>스터디 체크 사이트</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f0f0f0;
+text-align:center;
+}
+
+.container{
+background:white;
+padding:20px;
+margin:30px auto;
+width:400px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input,button{
+padding:8px;
+margin:5px;
+}
+
+.subject{
+margin-top:20px;
+border-top:1px solid #ddd;
+padding-top:10px;
+}
+
+.task{
+display:flex;
+justify-content:space-between;
+margin:5px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="loginBox">
+
+<h2>스터디 로그인</h2>
+
+<input type="password" id="password" placeholder="비밀번호">
+
+<button onclick="login()">입장</button>
+
+</div>
+
+<div class="container" id="mainBox" style="display:none">
+
+<h2>📚 우리 스터디</h2>
+
+<h3>과목 추가</h3>
+
+<input id="subjectInput" placeholder="과목 이름">
+
+<button onclick="addSubject()">추가</button>
+
+<div id="subjects"></div>
+
+</div>
+
+<script>
+
+const PASSWORD = "1234"
+
+function login(){
+
+let pw=document.getElementById("password").value
+
+if(pw===PASSWORD){
+
+document.getElementById("loginBox").style.display="none"
+document.getElementById("mainBox").style.display="block"
+
+loadData()
+
+}else{
+
+alert("비밀번호 틀림")
+
+}
+
+}
+
+function saveData(){
+
+localStorage.setItem("studyData",document.getElementById("subjects").innerHTML)
+
+}
+
+function loadData(){
+
+let data=localStorage.getItem("studyData")
+
+if(data){
+
+document.getElementById("subjects").innerHTML=data
+
+}
+
+}
+
+function addSubject(){
+
+let name=document.getElementById("subjectInput").value
+
+if(!name)return
+
+let div=document.createElement("div")
+
+div.className="subject"
+
+div.innerHTML=`
+
+<h3>${name}</h3>
+
+<input placeholder="할일 입력">
+
+<button onclick="addTask(this)">추가</button>
+
+<div></div>
+
+`
+
+document.getElementById("subjects").appendChild(div)
+
+document.getElementById("subjectInput").value=""
+
+saveData()
+
+}
+
+function addTask(btn){
+
+let input=btn.previousElementSibling
+
+let text=input.value
+
+if(!text)return
+
+let task=document.createElement("div")
+
+task.className="task"
+
+task.innerHTML=`
+
+<span>
+
+<input type="checkbox" onchange="saveData()">
+
+${text}
+
+</span>
+
+<span>
+
+검사 <input type="checkbox" onchange="saveData()">
+
+</span>
+
+`
+
+btn.nextElementSibling.appendChild(task)
+
+input.value=""
+
+saveData()
+
+}
+
+</script>
+
+</body>
+</html>
