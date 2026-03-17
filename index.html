@@ -16,10 +16,7 @@
             --border: #E5E7EB;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Pretendard', sans-serif;
-        }
+        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -30,10 +27,7 @@
             justify-content: center;
         }
 
-        .container {
-            width: 100%;
-            max-width: 600px; /* 모바일~태블릿 최적화 사이즈 */
-        }
+        .container { width: 100%; max-width: 600px; }
 
         .card {
             background: var(--card-bg);
@@ -45,8 +39,6 @@
 
         h2 { margin-top: 0; color: var(--text-main); }
         
-        .input-group { margin-bottom: 15px; }
-        
         input {
             width: 100%;
             padding: 12px;
@@ -56,11 +48,7 @@
             margin-bottom: 10px;
             transition: border-color 0.2s;
         }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        input:focus { outline: none; border-color: var(--primary); }
 
         button {
             width: 100%;
@@ -73,125 +61,35 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
+            margin-bottom: 8px;
         }
-
         button:hover { background-color: var(--primary-hover); }
 
-        /* 메인 화면 헤더 */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .logout-btn {
-            background-color: #EF4444;
-            width: auto;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
+        .btn-secondary { background-color: white; color: var(--primary); border: 1px solid var(--primary); }
+        .btn-secondary:hover { background-color: #EEF2FF; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logout-btn { background-color: #EF4444; width: auto; padding: 8px 16px; font-size: 14px; margin: 0; }
         .logout-btn:hover { background-color: #DC2626; }
 
-        /* 과제 목록 스타일 */
-        .subject-group {
-            margin-top: 25px;
-            background: #F9FAFB;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-        }
+        .subject-group { margin-top: 25px; background: #F9FAFB; border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
+        .subject-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; }
+        
+        .task-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .task-title { font-size: 16px; font-weight: 600; }
+        .task-note { font-size: 13px; color: var(--text-muted); margin-top: 5px; background: #F3F4F6; padding: 6px 10px; border-radius: 6px; display: inline-block; }
+        
+        .check-btn { width: auto; padding: 6px 12px; font-size: 13px; border-radius: 6px; margin: 0; }
+        .check-btn.checked { background-color: #10B981; }
 
-        .subject-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .progress-container { width: 100%; background-color: var(--border); border-radius: 99px; height: 8px; margin-top: 15px; margin-bottom: 8px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: #10B981; transition: width 0.3s ease; }
 
-        .task-item {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
+        .checker-list { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .checker-badge { background: #E0E7FF; color: var(--primary); font-size: 12px; padding: 4px 10px; border-radius: 99px; font-weight: 500; }
+        .empty-badge { background: #F3F4F6; color: var(--text-muted); }
 
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .task-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .task-link {
-            font-size: 13px;
-            color: #3B82F6;
-            text-decoration: none;
-            display: block;
-            margin-top: 5px;
-        }
-        .task-link:hover { text-decoration: underline; }
-
-        .check-btn {
-            width: auto;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 6px;
-        }
-
-        .check-btn.checked {
-            background-color: #10B981;
-        }
-
-        /* 진행률 바 */
-        .progress-container {
-            width: 100%;
-            background-color: var(--border);
-            border-radius: 99px;
-            height: 8px;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: #10B981;
-            transition: width 0.3s ease;
-        }
-
-        /* 검사한 사람 태그 */
-        .checker-list {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .checker-badge {
-            background: #E0E7FF;
-            color: var(--primary);
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 99px;
-            font-weight: 500;
-        }
-
-        .empty-badge {
-            background: #F3F4F6;
-            color: var(--text-muted);
-        }
-
-        /* 숨김 처리 */
         .hidden { display: none !important; }
     </style>
 </head>
@@ -200,9 +98,19 @@
 <div class="container">
     <div class="card" id="loginBox">
         <h2 style="text-align: center; margin-bottom: 20px;">스터디 로그인</h2>
-        <input id="loginId" type="text" placeholder="학번 (예: 23001)" autocomplete="off">
-        <input id="loginPw" type="password" placeholder="비밀번호 (1111)">
+        <input id="loginId" type="text" placeholder="학번 (예: 1101)">
+        <input id="loginPw" type="password" placeholder="비밀번호">
         <button onclick="login()">로그인</button>
+        <button class="btn-secondary" onclick="showSignup()">새로 오셨나요? 회원가입</button>
+    </div>
+
+    <div class="card hidden" id="signupBox">
+        <h2 style="text-align: center; margin-bottom: 20px;">스터디 회원가입</h2>
+        <input id="signupName" type="text" placeholder="이름 (예: 홍길동)">
+        <input id="signupId" type="text" placeholder="학번 (예: 1101)">
+        <input id="signupPw" type="password" placeholder="비밀번호">
+        <button onclick="registerUser()">가입하기</button>
+        <button class="btn-secondary" onclick="showLogin()">돌아가기</button>
     </div>
 
     <div id="mainBox" class="hidden">
@@ -214,34 +122,23 @@
         <div class="card">
             <h3>새 과제 추가</h3>
             <div style="display: flex; gap: 10px;">
-                <input id="subject" placeholder="과목 (예: 수학)" style="width: 40%;">
-                <input id="task" placeholder="과제 내용 (예: 미적분 20문제)" style="width: 60%;">
+                <input id="subject" placeholder="과목 (예: 수학)" style="width: 30%;">
+                <input id="task" placeholder="과제 내용 (예: 미적분 20문제)" style="width: 70%;">
             </div>
-            <input id="link" placeholder="참고 자료 링크 (선택사항, URL 입력)">
+            <input id="note" placeholder="메모나 주석 (선택사항, 예: 홀수 번호만 풀기)">
             <button onclick="addTask()">과제 등록하기</button>
         </div>
 
-        <div id="tasksContainer">
-            </div>
+        <div id="tasksContainer"></div>
     </div>
 </div>
 
 <script>
-    const USERS = [
-        {id:"2302", name:"김지아", pw:"1111"},
-        {id:"2102", name:"이예인", pw:"1111"},
-        {id:"23003", name:"서윤", pw:"1111"},
-        {id:"23004", name:"하린", pw:"1111"},
-        {id:"23005", name:"지훈", pw:"1111"}
-    ];
-    
-    const TOTAL_MEMBERS = USERS.length;
-    let currentUser = "";
-    
-    // 로컬 스토리지에서 데이터 불러오기 (고유 ID 추가)
+    // 회원 정보 및 과제 정보 불러오기
+    let users = JSON.parse(localStorage.getItem("studyUsers") || "[]");
     let tasks = JSON.parse(localStorage.getItem("studyTasks") || "[]");
+    let currentUser = "";
 
-    // 앱 시작 시 로그인 상태 확인
     window.onload = () => {
         const savedUser = localStorage.getItem("currentUser");
         if(savedUser) {
@@ -250,18 +147,54 @@
         }
     };
 
-    function login() {
-        let id = document.getElementById("loginId").value;
-        let pw = document.getElementById("loginPw").value;
+    function showSignup() {
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("signupBox").classList.remove("hidden");
+    }
 
-        let user = USERS.find(u => u.id === id && u.pw === pw);
+    function showLogin() {
+        document.getElementById("signupBox").classList.add("hidden");
+        document.getElementById("loginBox").classList.remove("hidden");
+    }
+
+    function registerUser() {
+        let name = document.getElementById("signupName").value.trim();
+        let id = document.getElementById("signupId").value.trim();
+        let pw = document.getElementById("signupPw").value.trim();
+
+        if(!name || !id || !pw) {
+            alert("이름, 학번, 비밀번호를 모두 입력해주세요!");
+            return;
+        }
+
+        if(users.some(u => u.id === id)) {
+            alert("이미 가입된 학번입니다!");
+            return;
+        }
+
+        users.push({ id: id, name: name, pw: pw });
+        localStorage.setItem("studyUsers", JSON.stringify(users));
+        
+        alert(`${name}님 가입 완료! 이제 로그인해주세요.`);
+        
+        document.getElementById("signupName").value = "";
+        document.getElementById("signupId").value = "";
+        document.getElementById("signupPw").value = "";
+        showLogin();
+    }
+
+    function login() {
+        let id = document.getElementById("loginId").value.trim();
+        let pw = document.getElementById("loginPw").value.trim();
+
+        let user = users.find(u => u.id === id && u.pw === pw);
 
         if(user) {
             currentUser = user.name;
             localStorage.setItem("currentUser", currentUser);
             showMain();
         } else {
-            alert("학번이나 비밀번호가 틀렸습니다. (예: 23001 / 1111)");
+            alert("학번이나 비밀번호가 틀렸거나, 아직 가입하지 않았습니다.");
         }
     }
 
@@ -284,7 +217,7 @@
     function addTask() {
         let subject = document.getElementById("subject").value.trim();
         let task = document.getElementById("task").value.trim();
-        let link = document.getElementById("link").value.trim();
+        let note = document.getElementById("note").value.trim(); // 주석(메모) 값 가져오기
 
         if(!subject || !task) {
             alert("과목과 과제 내용은 필수입니다!");
@@ -292,17 +225,16 @@
         }
 
         tasks.push({
-            id: Date.now(), // 고유 ID 부여
+            id: Date.now(),
             subject: subject,
             task: task,
-            link: link,
+            note: note, // 주석 저장
             checkedBy: []
         });
 
-        // 입력창 초기화
         document.getElementById("subject").value = "";
         document.getElementById("task").value = "";
-        document.getElementById("link").value = "";
+        document.getElementById("note").value = "";
 
         save();
         render();
@@ -315,9 +247,9 @@
         let task = tasks[taskIndex];
         
         if(!task.checkedBy.includes(currentUser)) {
-            task.checkedBy.push(currentUser); // 검사 완료
+            task.checkedBy.push(currentUser);
         } else {
-            task.checkedBy = task.checkedBy.filter(n => n !== currentUser); // 검사 취소
+            task.checkedBy = task.checkedBy.filter(n => n !== currentUser);
         }
 
         save();
@@ -345,14 +277,15 @@
             return;
         }
 
-        // 과목별로 데이터 묶기 (Grouping)
         let groupedTasks = tasks.reduce((acc, task) => {
             if (!acc[task.subject]) acc[task.subject] = [];
             acc[task.subject].push(task);
             return acc;
         }, {});
 
-        // 과목별로 렌더링
+        // 전체 가입자 수 (진행률 계산용)
+        let totalMembers = users.length > 0 ? users.length : 1; 
+
         for (let subject in groupedTasks) {
             let subjectHtml = `<div class="subject-group">
                                 <div class="subject-title">
@@ -361,12 +294,11 @@
             
             groupedTasks[subject].forEach(t => {
                 let isChecked = t.checkedBy.includes(currentUser);
-                let progressPercent = (t.checkedBy.length / TOTAL_MEMBERS) * 100;
+                let progressPercent = Math.round((t.checkedBy.length / totalMembers) * 100);
                 
-                // 링크가 있으면 a 태그 생성
-                let linkHtml = t.link ? `<a href="${t.link.startsWith('http') ? t.link : 'http://'+t.link}" target="_blank" class="task-link">🔗 참고 자료 링크</a>` : '';
+                // 주석(메모)이 있으면 표시, 없으면 숨김
+                let noteHtml = t.note ? `<div class="task-note">💬 ${t.note}</div>` : '';
 
-                // 검사한 사람 뱃지 만들기
                 let badgesHtml = t.checkedBy.map(name => `<span class="checker-badge">${name}</span>`).join('');
                 if(t.checkedBy.length === 0) badgesHtml = `<span class="checker-badge empty-badge">아직 검사한 사람이 없어요</span>`;
 
@@ -375,7 +307,7 @@
                         <div class="task-header">
                             <div>
                                 <div class="task-title">${t.task}</div>
-                                ${linkHtml}
+                                ${noteHtml}
                             </div>
                             <button class="check-btn ${isChecked ? 'checked' : ''}" onclick="toggleCheck(${t.id})">
                                 ${isChecked ? '✅ 검사완료' : '⬜ 검사하기'}
@@ -383,7 +315,7 @@
                         </div>
                         
                         <div style="font-size: 12px; color: gray; margin-top: 10px;">
-                            진행률: ${t.checkedBy.length} / ${TOTAL_MEMBERS} 명 (${progressPercent}%)
+                            진행률: ${t.checkedBy.length} / ${totalMembers} 명 (${progressPercent}%)
                         </div>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: ${progressPercent}%;"></div>
