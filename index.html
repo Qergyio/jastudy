@@ -166,10 +166,15 @@
     }
 
     // 서버(구글 시트)에서 데이터 불러오기
+    // 서버(구글 시트)에서 데이터 불러오기
     async function loadDataFromServer() {
         showLoading(true);
         try {
-            let res = await fetch(SCRIPT_URL);
+            // 🔥 핵심 마법: 주소 뒤에 현재 시간(?t=시간)을 붙여서, 브라우저가 무조건 최신 데이터를 새로고침 하도록 강제함!
+            let res = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), {
+                method: "GET",
+                redirect: "follow"
+            });
             let data = await res.json();
             tasks = data; // 서버 데이터를 내 폰에 덮어쓰기
             
