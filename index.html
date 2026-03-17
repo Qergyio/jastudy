@@ -2,40 +2,34 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>스터디 체크 사이트</title>
+<title>스터디 체크</title>
 
 <style>
 
 body{
-font-family: Arial;
-background:#f0f0f0;
+font-family:Arial;
+background:#f2f2f2;
 text-align:center;
 }
 
-.container{
+.box{
 background:white;
 padding:20px;
-margin:30px auto;
 width:400px;
+margin:auto;
+margin-top:40px;
 border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-input,button{
+button,input{
 padding:8px;
 margin:5px;
-}
-
-.subject{
-margin-top:20px;
-border-top:1px solid #ddd;
-padding-top:10px;
 }
 
 .task{
 display:flex;
 justify-content:space-between;
-margin:5px 0;
+margin:5px;
 }
 
 </style>
@@ -43,136 +37,124 @@ margin:5px 0;
 
 <body>
 
-<div class="container" id="loginBox">
+<div class="box" id="loginBox">
 
 <h2>스터디 로그인</h2>
 
-<input type="password" id="password" placeholder="비밀번호">
+<input id="id" placeholder="학번">
+<input id="pw" type="password" placeholder="비밀번호">
 
-<button onclick="login()">입장</button>
-
-</div>
-
-<div class="container" id="mainBox" style="display:none">
-
-<h2>📚 우리 스터디</h2>
-
-<h3>과목 추가</h3>
-
-<input id="subjectInput" placeholder="과목 이름">
-
-<button onclick="addSubject()">추가</button>
-
-<div id="subjects"></div>
+<button onclick="login()">로그인</button>
 
 </div>
 
-<script>
+<div class="box" id="mainBox" style="display:none">
 
-const PASSWORD = "1234"
+<h2>스터디 과제</h2>
 
-function login(){
+<input id="subject" placeholder="과목">
+<input id="task" placeholder="과제">
 
-let pw=document.getElementById("password").value
+<button onclick="addTask()">추가</button>
 
-if(pw===PASSWORD){
+<div id="tasks"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "여기에Firebase코드",
+authDomain: "여기에Firebase코드",
+projectId: "여기에Firebase코드",
+storageBucket: "여기에Firebase코드",
+messagingSenderId: "여기에Firebase코드",
+appId: "여기에Firebase코드"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const USERS = [
+{id:"23001",name:"김지아",pw:"1111"},
+{id:"23002",name:"민수",pw:"1111"},
+{id:"23003",name:"서윤",pw:"1111"},
+{id:"23004",name:"하린",pw:"1111"},
+{id:"23005",name:"지훈",pw:"1111"}
+]
+
+let currentUser=""
+
+window.login=function(){
+
+let id=document.getElementById("id").value
+let pw=document.getElementById("pw").value
+
+let user=USERS.find(u=>u.id===id && u.pw===pw)
+
+if(user){
+
+currentUser=user.name
 
 document.getElementById("loginBox").style.display="none"
 document.getElementById("mainBox").style.display="block"
 
-loadData()
+loadTasks()
 
 }else{
 
-alert("비밀번호 틀림")
+alert("로그인 실패")
 
 }
 
 }
 
-function saveData(){
+window.addTask=async function(){
 
-localStorage.setItem("studyData",document.getElementById("subjects").innerHTML)
+let subject=document.getElementById("subject").value
+let task=document.getElementById("task").value
 
-}
-
-function loadData(){
-
-let data=localStorage.getItem("studyData")
-
-if(data){
-
-document.getElementById("subjects").innerHTML=data
+await addDoc(collection(db,"tasks"),{
+subject:subject,
+task:task,
+checkedBy:""
+})
 
 }
 
-}
+function loadTasks(){
 
-function addSubject(){
+onSnapshot(collection(db,"tasks"),(snapshot)=>{
 
-let name=document.getElementById("subjectInput").value
+let html=""
 
-if(!name)return
+snapshot.forEach(doc=>{
 
-let div=document.createElement("div")
+let d=doc.data()
 
-div.className="subject"
-
-div.innerHTML=`
-
-<h3>${name}</h3>
-
-<input placeholder="할일 입력">
-
-<button onclick="addTask(this)">추가</button>
-
-<div></div>
-
+html+=`
+<div class="task">
+<span>${d.subject} : ${d.task}</span>
+<button onclick="check('${doc.id}')">검사</button>
+</div>
 `
 
-document.getElementById("subjects").appendChild(div)
+})
 
-document.getElementById("subjectInput").value=""
+document.getElementById("tasks").innerHTML=html
 
-saveData()
+})
 
 }
 
-function addTask(btn){
+window.check=function(id){
 
-let input=btn.previousElementSibling
-
-let text=input.value
-
-if(!text)return
-
-let task=document.createElement("div")
-
-task.className="task"
-
-task.innerHTML=`
-
-<span>
-
-<input type="checkbox" onchange="saveData()">
-
-${text}
-
-</span>
-
-<span>
-
-검사 <input type="checkbox" onchange="saveData()">
-
-</span>
-
-`
-
-btn.nextElementSibling.appendChild(task)
-
-input.value=""
-
-saveData()
+alert(currentUser+" 검사 완료")
 
 }
 
